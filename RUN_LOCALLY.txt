@@ -1,0 +1,368 @@
+================================================================================
+                    HOW TO RUN GITHUB ISSUE ANALYZER LOCALLY
+================================================================================
+
+This document provides step-by-step instructions to run the GitHub Issue Analyzer
+application on your local machine.
+
+================================================================================
+SYSTEM REQUIREMENTS
+================================================================================
+
+- Windows, macOS, or Linux
+- Python 3.8 or higher
+- pip (Python package manager) - Usually comes with Python
+- Git (for cloning the repository)
+- At least 2GB of available RAM
+- At least 500MB of disk space
+
+How to check your Python version:
+  - Open terminal/command prompt and run: python --version
+
+================================================================================
+STEP 1: GET API KEYS AND TOKENS
+================================================================================
+
+Before running the application, you need to obtain two credentials:
+
+A) GOOGLE GEMINI API KEY
+   1. Go to https://aistudio.google.com/
+   2. Click on "Get API Key" button
+   3. Click "Create API key in new project"
+   4. Copy the generated API key
+   5. Keep it safe - you'll need it for the .env file
+
+B) GITHUB PERSONAL ACCESS TOKEN
+   1. Go to https://github.com/settings/tokens
+   2. Click "Generate new token" (classic)
+   3. Give it a descriptive name (e.g., "Issue Analyzer")
+   4. Select scopes: repo, read:user (minimum required)
+   5. Click "Generate token"
+   6. Copy the token immediately (you won't see it again)
+   7. Keep it safe - you'll need it for the .env file
+
+================================================================================
+STEP 2: CLONE THE REPOSITORY
+================================================================================
+
+1. Open your terminal/command prompt
+2. Navigate to where you want to store the project:
+   cd C:\Users\YourUsername\Documents
+   (or any other location you prefer)
+
+3. Clone the repository:
+   git clone <repository-url>
+
+4. Navigate to the project directory:
+   cd final_Seedlings
+
+================================================================================
+STEP 3: CREATE ENVIRONMENT VARIABLES FILE
+================================================================================
+
+1. In the project root directory (final_Seedlings), create a file named ".env"
+
+2. Add the following content to the .env file:
+   
+   # API Keys
+   GEMINI_API_KEY=<paste_your_google_gemini_api_key_here>
+   GITHUB_TOKEN=<paste_your_github_personal_access_token_here>
+   
+   # Backend Configuration
+   HOST=0.0.0.0
+   PORT=8000
+   RELOAD=true
+   DEBUG=false
+   
+   # Frontend URL
+   FRONTEND_URL=http://localhost:8501
+   
+   # Redis Configuration (optional)
+   REDIS_ENABLED=false
+   REDIS_HOST=localhost
+   REDIS_PORT=6379
+   REDIS_DB=0
+   CACHE_TTL=86400
+
+3. Replace the API_KEY and TOKEN placeholders with your actual credentials
+
+Example .env file (with dummy values):
+   GEMINI_API_KEY=AIzaSyBcD1eF2gH3iJ4kL5mN6oP7qR8sT9uV0wX
+   GITHUB_TOKEN=ghp_1234567890abcdefghijklmnopqrstuvwxyz123456
+   HOST=0.0.0.0
+   PORT=8000
+   RELOAD=true
+   DEBUG=false
+   FRONTEND_URL=http://localhost:8501
+   REDIS_ENABLED=false
+
+================================================================================
+STEP 4: INSTALL PYTHON DEPENDENCIES
+================================================================================
+
+Windows Users (Command Prompt):
+   cd backend
+   pip install -r requirements.txt
+   cd ..
+
+macOS/Linux Users (Terminal):
+   cd backend
+   pip3 install -r requirements.txt
+   cd ..
+
+Note: If you encounter permission errors, try:
+   pip install --user -r requirements.txt
+
+This installs:
+   - FastAPI and Uvicorn (backend framework)
+   - Google Generative AI (for Gemini integration)
+   - PyGithub (for GitHub API integration)
+   - Streamlit (for frontend)
+   - Redis and caching utilities
+   - Testing and development tools
+
+Installation might take 2-5 minutes depending on internet speed.
+
+================================================================================
+STEP 5: RUN THE BACKEND SERVER
+================================================================================
+
+1. Open a terminal/command prompt in the project root directory
+
+2. Navigate to the backend folder:
+   cd backend
+
+3. Start the backend server:
+   
+   Windows:
+   python main.py
+   
+   macOS/Linux:
+   python3 main.py
+
+4. You should see output like:
+   INFO:     Uvicorn running on http://0.0.0.0:8000 (Press CTRL+C to quit)
+   INFO:     Application startup complete
+
+5. The backend is now running! You can access:
+   - API: http://localhost:8000
+   - API Docs: http://localhost:8000/docs
+   - Alternative Docs: http://localhost:8000/redoc
+
+KEEP THIS TERMINAL OPEN - Don't close it while using the application!
+
+================================================================================
+STEP 6: RUN THE FRONTEND APPLICATION
+================================================================================
+
+1. Open a NEW terminal/command prompt (keep the backend terminal open!)
+
+2. Navigate to the project root directory:
+   cd C:\Path\To\final_Seedlings
+
+3. Navigate to the frontend folder:
+   cd frontend
+
+4. Start the Streamlit app:
+   
+   Windows:
+   streamlit run app.py
+   
+   macOS/Linux:
+   streamlit3 run app.py
+
+5. You should see output like:
+   
+     You can now view your Streamlit app in your browser.
+     Local URL: http://localhost:8501
+
+6. A browser window should open automatically. If not, manually navigate to:
+   http://localhost:8501
+
+7. You're ready to use the application!
+
+================================================================================
+STEP 7: USING THE APPLICATION
+================================================================================
+
+1. On the Streamlit interface, you'll see the GitHub Issue Analyzer
+2. Enter a GitHub repository URL or owner/repo name
+3. Configure analysis parameters as needed
+4. Click "Analyze" to process the issues
+5. View the results, summaries, and analytics
+
+The frontend will communicate with the backend to:
+   - Fetch issues from GitHub using your token
+   - Analyze issues using Google Gemini AI
+   - Display results and analytics
+
+================================================================================
+STOPPING THE APPLICATION
+================================================================================
+
+To stop the application:
+
+1. Frontend (Streamlit):
+   Press CTRL+C in the Streamlit terminal
+
+2. Backend (FastAPI):
+   Press CTRL+C in the backend terminal
+
+================================================================================
+TROUBLESHOOTING
+================================================================================
+
+ISSUE: "Module not found" errors
+SOLUTION: Ensure you ran "pip install -r backend/requirements.txt"
+          If still failing, try: pip install --user -r backend/requirements.txt
+
+ISSUE: Port 8000 is already in use
+SOLUTION: Change PORT in .env file to 8001 (or another available port)
+          Then restart the backend server
+
+ISSUE: "GEMINI_API_KEY not found" error
+SOLUTION: Make sure .env file is in the project root directory
+          Verify API key is correctly copied in the .env file
+          Restart the backend server after updating .env
+
+ISSUE: Frontend can't connect to backend
+SOLUTION: Verify backend is running on http://localhost:8000
+          Check that port 8000 is accessible
+          Restart both frontend and backend
+
+ISSUE: "Permission denied" when installing packages
+SOLUTION: Use: pip install --user -r backend/requirements.txt
+          Or create a virtual environment (see advanced section)
+
+ISSUE: GitHub Token is invalid
+SOLUTION: Re-generate a new token from https://github.com/settings/tokens
+          Update the GITHUB_TOKEN in .env file
+          Restart the backend
+
+ISSUE: Streamlit app doesn't open in browser
+SOLUTION: Manually open http://localhost:8501 in your web browser
+          Check if another app is using port 8501
+
+================================================================================
+ADVANCED: USING PYTHON VIRTUAL ENVIRONMENT (OPTIONAL)
+================================================================================
+
+Using a virtual environment is recommended for Python development.
+It isolates project dependencies and prevents conflicts.
+
+Windows (Command Prompt):
+   python -m venv venv
+   venv\Scripts\activate
+   cd backend
+   pip install -r requirements.txt
+   cd ..
+
+macOS/Linux (Terminal):
+   python3 -m venv venv
+   source venv/bin/activate
+   cd backend
+   pip install -r requirements.txt
+   cd ..
+
+To deactivate the virtual environment:
+   Windows: venv\Scripts\deactivate
+   macOS/Linux: deactivate
+
+================================================================================
+ADVANCED: RUNNING WITH REDIS CACHING (OPTIONAL)
+================================================================================
+
+Redis provides caching for improved performance. This is optional.
+
+1. Install Redis:
+   - Windows: Download from https://github.com/microsoftarchive/redis/releases
+   - macOS: brew install redis
+   - Linux: sudo apt-get install redis-server
+
+2. Start Redis server (keep it running in a separate terminal):
+   - Windows: redis-server.exe
+   - macOS/Linux: redis-server
+
+3. Update .env file:
+   REDIS_ENABLED=true
+
+4. Restart the backend server
+
+================================================================================
+TESTING THE APPLICATION
+================================================================================
+
+To run automated tests:
+
+1. Navigate to the backend directory:
+   cd backend
+
+2. Run tests:
+   pytest                    # Run all tests
+   pytest -v               # Verbose output
+   pytest --cov            # With coverage report
+   pytest test_api.py      # Run specific test file
+
+Requirements: All dependencies from requirements.txt include testing tools
+
+================================================================================
+EXPECTED PORT NUMBERS
+================================================================================
+
+Backend API: http://localhost:8000
+   - Main API: http://localhost:8000
+   - Swagger UI: http://localhost:8000/docs
+   - ReDoc: http://localhost:8000/redoc
+
+Frontend (Streamlit): http://localhost:8501
+
+If ports are already in use, you can change them:
+   - Backend: Modify PORT in .env file
+   - Frontend: Use: streamlit run app.py --server.port=8502
+
+================================================================================
+FILE STRUCTURE REMINDER
+================================================================================
+
+final_Seedlings/
+├── .env                    (Create this file with API keys)
+├── backend/
+│   ├── main.py            (Backend entry point)
+│   ├── requirements.txt    (Python dependencies)
+│   └── app/               (Application code)
+├── frontend/
+│   ├── app.py             (Frontend entry point)
+│   └── pages/             (Streamlit pages)
+├── tests/                 (Automated tests)
+└── README.md              (Project documentation)
+
+================================================================================
+NEXT STEPS
+================================================================================
+
+1. Read the README.md for more detailed information
+2. Check http://localhost:8000/docs for API documentation
+3. Explore the Streamlit interface at http://localhost:8501
+4. Run tests to ensure everything works: pytest
+5. Customize configuration as needed
+
+================================================================================
+GETTING HELP
+================================================================================
+
+If you encounter issues:
+
+1. Check the TROUBLESHOOTING section above
+2. Read the README.md file for detailed documentation
+3. Check the API documentation at http://localhost:8000/docs
+4. Verify all environment variables are set correctly
+5. Ensure backend and frontend are both running
+
+================================================================================
+END OF SETUP INSTRUCTIONS
+================================================================================
+
+Good luck running GitHub Issue Analyzer! Enjoy analyzing your GitHub issues
+with the power of AI.
+
+Questions? Please refer to the README.md file or the API documentation.

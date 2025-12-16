@@ -71,7 +71,25 @@ git clone <repository-url>
 cd final_Seedlings
 ```
 
-### 2. Create Environment Variables
+### 2. Create Virtual Environment
+
+Create and activate a Python virtual environment:
+
+**Windows (Command Prompt or PowerShell):**
+```bash
+python -m venv venv
+venv\Scripts\activate
+```
+
+**macOS/Linux (Terminal):**
+```bash
+python3 -m venv venv
+source venv/bin/activate
+```
+
+You should see `(venv)` at the beginning of your terminal prompt when activated.
+
+### 3. Create Environment Variables
 
 Create a `.env` file in the root directory:
 
@@ -97,7 +115,9 @@ REDIS_DB=0
 CACHE_TTL=86400
 ```
 
-### 3. Install Backend Dependencies
+### 4. Install Backend Dependencies
+
+Make sure your virtual environment is activated, then:
 
 ```bash
 cd backend
@@ -105,21 +125,34 @@ pip install -r requirements.txt
 cd ..
 ```
 
-### 4. Run Backend Server
+### 5. Run Backend Server
+
+With virtual environment still activated:
 
 ```bash
 cd backend
-python main.py
-```
+# Start backend using Uvicorn (recommended)
+uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
+
 
 The backend API will be available at `http://localhost:8000`
 - API Documentation: `http://localhost:8000/docs`
 - Alternative Docs: `http://localhost:8000/redoc`
 
-### 5. Run Frontend (in a new terminal)
+### 6. Run Frontend (in a new terminal)
 
+Open a new terminal/command prompt in the project root directory and activate the virtual environment:
+
+**Windows:**
 ```bash
-pip install streamlit
+venv\Scripts\activate
+cd frontend
+streamlit run app.py
+```
+
+**macOS/Linux:**
+```bash
+source venv/bin/activate
 cd frontend
 streamlit run app.py
 ```
@@ -178,14 +211,3 @@ pytest test_api.py      # Run specific test file
 - Check that the API key has not expired
 - Ensure the key has required permissions
 
-## 📝 License
-
-This project is provided as-is for educational and commercial use.
-
-## 👤 Author
-
-GitHub Issue Analyzer Team
-
-## 🤝 Contributing
-
-Contributions are welcome! Please follow PEP 8 style guidelines and ensure all tests pass before submitting pull requests.

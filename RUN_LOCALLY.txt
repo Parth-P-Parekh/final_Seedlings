@@ -57,7 +57,31 @@ STEP 2: CLONE THE REPOSITORY
    cd final_Seedlings
 
 ================================================================================
-STEP 3: CREATE ENVIRONMENT VARIABLES FILE
+STEP 3: CREATE VIRTUAL ENVIRONMENT
+================================================================================
+
+It's recommended to use a Python virtual environment to isolate project dependencies.
+
+Windows (Command Prompt):
+   python -m venv venv
+   venv\Scripts\activate
+
+Windows (PowerShell):
+   python -m venv venv
+   venv\Scripts\Activate.ps1
+
+macOS/Linux (Terminal):
+   python3 -m venv venv
+   source venv/bin/activate
+
+After running these commands, you should see (venv) at the start of your terminal
+prompt, indicating the virtual environment is active.
+
+To deactivate the virtual environment later, simply type:
+   deactivate
+
+================================================================================
+STEP 4: CREATE ENVIRONMENT VARIABLES FILE
 ================================================================================
 
 1. In the project root directory (final_Seedlings), create a file named ".env"
@@ -97,8 +121,10 @@ Example .env file (with dummy values):
    REDIS_ENABLED=false
 
 ================================================================================
-STEP 4: INSTALL PYTHON DEPENDENCIES
+STEP 5: INSTALL PYTHON DEPENDENCIES
 ================================================================================
+
+Make sure your virtual environment is ACTIVATED (you should see (venv) in your prompt).
 
 Windows Users (Command Prompt):
    cd backend
@@ -109,9 +135,6 @@ macOS/Linux Users (Terminal):
    cd backend
    pip3 install -r requirements.txt
    cd ..
-
-Note: If you encounter permission errors, try:
-   pip install --user -r requirements.txt
 
 This installs:
    - FastAPI and Uvicorn (backend framework)
@@ -124,21 +147,22 @@ This installs:
 Installation might take 2-5 minutes depending on internet speed.
 
 ================================================================================
-STEP 5: RUN THE BACKEND SERVER
+STEP 6: RUN THE BACKEND SERVER
 ================================================================================
 
-1. Open a terminal/command prompt in the project root directory
+1. Make sure your virtual environment is ACTIVATED (you should see (venv) in your prompt)
 
-2. Navigate to the backend folder:
+2. In your terminal/command prompt, navigate to the backend folder:
    cd backend
 
 3. Start the backend server:
-   
-   Windows:
-   python main.py
-   
-   macOS/Linux:
-   python3 main.py
+
+Make sure your virtual environment is ACTIVATED and you are in the `backend` folder, then run:
+
+```bash
+# Start backend using Uvicorn (recommended)
+uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
+```
 
 4. You should see output like:
    INFO:     Uvicorn running on http://0.0.0.0:8000 (Press CTRL+C to quit)
@@ -152,7 +176,7 @@ STEP 5: RUN THE BACKEND SERVER
 KEEP THIS TERMINAL OPEN - Don't close it while using the application!
 
 ================================================================================
-STEP 6: RUN THE FRONTEND APPLICATION
+STEP 7: RUN THE FRONTEND APPLICATION
 ================================================================================
 
 1. Open a NEW terminal/command prompt (keep the backend terminal open!)
@@ -160,29 +184,67 @@ STEP 6: RUN THE FRONTEND APPLICATION
 2. Navigate to the project root directory:
    cd C:\Path\To\final_Seedlings
 
-3. Navigate to the frontend folder:
+3. Activate the virtual environment in the NEW terminal:
+   
+   Windows (Command Prompt):
+   venv\Scripts\activate
+   
+   Windows (PowerShell):
+   venv\Scripts\Activate.ps1
+   
+   macOS/Linux (Terminal):
+   source venv/bin/activate
+
+4. Navigate to the frontend folder:
    cd frontend
 
-4. Start the Streamlit app:
+5. Start the Streamlit app:
    
    Windows:
    streamlit run app.py
    
    macOS/Linux:
-   streamlit3 run app.py
+   streamlit run app.py
 
-5. You should see output like:
+6. You should see output like:
    
      You can now view your Streamlit app in your browser.
      Local URL: http://localhost:8501
 
-6. A browser window should open automatically. If not, manually navigate to:
+7. A browser window should open automatically. If not, manually navigate to:
    http://localhost:8501
 
-7. You're ready to use the application!
+8. You're ready to use the application!
 
 ================================================================================
-STEP 7: USING THE APPLICATION
+STEP 8: STOPPING THE APPLICATION
+================================================================================
+
+To stop the application:
+
+1. Frontend (Streamlit):
+   Press CTRL+C in the Streamlit terminal
+
+2. Backend (FastAPI):
+   Press CTRL+C in the backend terminal
+
+3. Deactivate virtual environment (optional):
+   deactivate
+
+================================================================================
+STEP 9: USING THE APPLICATION
+================================================================================
+
+1. On the Streamlit interface, you'll see the GitHub Issue Analyzer
+2. Enter a GitHub repository URL or owner/repo name
+3. Configure analysis parameters as needed
+4. Click "Analyze" to process the issues
+5. View the results, summaries, and analytics
+
+The frontend will communicate with the backend to:
+   - Fetch issues from GitHub using your token
+   - Analyze issues using Google Gemini AI
+   - Display results and analytics
 ================================================================================
 
 1. On the Streamlit interface, you'll see the GitHub Issue Analyzer
@@ -197,24 +259,18 @@ The frontend will communicate with the backend to:
    - Display results and analytics
 
 ================================================================================
-STOPPING THE APPLICATION
-================================================================================
-
-To stop the application:
-
-1. Frontend (Streamlit):
-   Press CTRL+C in the Streamlit terminal
-
-2. Backend (FastAPI):
-   Press CTRL+C in the backend terminal
-
-================================================================================
 TROUBLESHOOTING
 ================================================================================
 
 ISSUE: "Module not found" errors
 SOLUTION: Ensure you ran "pip install -r backend/requirements.txt"
+          Make sure your virtual environment is activated (you should see (venv))
           If still failing, try: pip install --user -r backend/requirements.txt
+
+ISSUE: Virtual environment not activating
+SOLUTION: Windows (PowerShell): Run Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser
+          Then try: venv\Scripts\Activate.ps1
+          Or use Command Prompt instead: venv\Scripts\activate
 
 ISSUE: Port 8000 is already in use
 SOLUTION: Change PORT in .env file to 8001 (or another available port)
@@ -229,10 +285,7 @@ ISSUE: Frontend can't connect to backend
 SOLUTION: Verify backend is running on http://localhost:8000
           Check that port 8000 is accessible
           Restart both frontend and backend
-
-ISSUE: "Permission denied" when installing packages
-SOLUTION: Use: pip install --user -r backend/requirements.txt
-          Or create a virtual environment (see advanced section)
+          Make sure you're running both with the virtual environment activated
 
 ISSUE: GitHub Token is invalid
 SOLUTION: Re-generate a new token from https://github.com/settings/tokens
@@ -243,30 +296,10 @@ ISSUE: Streamlit app doesn't open in browser
 SOLUTION: Manually open http://localhost:8501 in your web browser
           Check if another app is using port 8501
 
-================================================================================
-ADVANCED: USING PYTHON VIRTUAL ENVIRONMENT (OPTIONAL)
-================================================================================
-
-Using a virtual environment is recommended for Python development.
-It isolates project dependencies and prevents conflicts.
-
-Windows (Command Prompt):
-   python -m venv venv
-   venv\Scripts\activate
-   cd backend
-   pip install -r requirements.txt
-   cd ..
-
-macOS/Linux (Terminal):
-   python3 -m venv venv
-   source venv/bin/activate
-   cd backend
-   pip install -r requirements.txt
-   cd ..
-
-To deactivate the virtual environment:
-   Windows: venv\Scripts\deactivate
-   macOS/Linux: deactivate
+ISSUE: Dependencies not installing
+SOLUTION: Make sure your virtual environment is ACTIVATED
+          Try upgrading pip: pip install --upgrade pip
+          Then retry: pip install -r backend/requirements.txt
 
 ================================================================================
 ADVANCED: RUNNING WITH REDIS CACHING (OPTIONAL)
